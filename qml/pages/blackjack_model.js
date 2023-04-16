@@ -47,7 +47,7 @@ function Model()
         else
             points = 10
 
-        console.log("card value " + cardValue + " points " + points)
+        //console.log("card value " + cardValue + " points " + points)
 
         if (isPlayer === true)
             this.playerSum += points

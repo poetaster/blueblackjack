@@ -24,8 +24,6 @@ Page {
         var mdl = model
         model = new M.Model()
         model = mdl
-        console.log(model.dealerSum)
-        console.log(model.playerSum)
     }
 
     function showGameOver() {
@@ -46,10 +44,10 @@ Page {
         // Reset model sums and card rows
         model.dealerSum = 0
         model.playerSum = 0
-        playerRow.model = 2
-        dealerRow.model = 1
-        playerRow.model = 11
-        dealerRow.model = 11
+        playerRow.model = 0
+        dealerRow.model = 0
+        //playerRow.model = 11
+        //dealerRow.model = 11
         // update internal model
         update()
         model.shuffle()
@@ -57,17 +55,18 @@ Page {
         hitClicked()
         hitClicked()
         // a dealer card
+        initDealer()
         model.takeOne(false, currentDealerIndex + 11)
         dealerHits()
         update()
     }
 
     function hitClicked() {
+        playerRow.model = playerRow.model + 1
         var elem = playerRow.itemAt(currentPlayerIndex)
-        elem.x = currentPlayerIndex*60 + 150
+        elem.x = currentPlayerIndex*101
         window.model.takeOne(true, currentPlayerIndex)
         window.currentPlayerIndex += 1
-
         if (window.sum >= 21)
             showGameOver()
 
@@ -75,15 +74,22 @@ Page {
             window.standClicked()
     }
 
+    function initDealer() {
+        //dealerRow.model = dealerRow.model + 1
+
+    }
+
     function dealerHits() {
+        dealerRow.model = dealerRow.model + 1
         var elem = dealerRow.itemAt(currentDealerIndex)
-        elem.x = currentDealerIndex*60 + 150
+        elem.x = currentDealerIndex*101
         window.currentDealerIndex += 1
     }
 
     function standClicked() {
         var hitsNumber = window.model.dealerPlays()
         for (var i = 0; i < hitsNumber; ++i)
+            //dealerRow.model = dealerRow.model + 1
             dealerHits()
         showGameOver()
     }
@@ -259,19 +265,16 @@ Page {
 
     Repeater {
        id: playerRow
-       x: 30
-       y: 40
        width: parent.width
-       height: parent.height
-       model: 11
+       model: 0
 
        Rectangle {
            id: playerCard
            readonly property int value: window.model.getCard(index)  //playerRow.outerIndex === 0 ? window.model.getCard(index+11) : window.model.getCard(index)
 
-           x: parent.x + 30
-           y: parent.y + 260
-           width: 100
+           x: parent.x + (index*100)
+           y: parent.y + 660
+           width: 200
            height: width * 1.5
            radius: 8
 
@@ -283,22 +286,21 @@ Page {
 
            Behavior on x {
                ParallelAnimation {
-
-                   PropertyAnimation {
-                       duration: 600
+                   /*PropertyAnimation {
+                       duration: 400
                        easing.type: Easing.InOutBack
-                   }
+                   }*/
 
                    SequentialAnimation {
                        PauseAnimation {
-                           duration: 200
+                           duration: 100
                        }
 
                        RotationAnimation {
                            target: playerCard
                            direction: RotationAnimation.Clockwise
-                           to: rotation + 360
-                           duration: 400
+                           to: rotation + 180
+                           duration: 200
                        }
                    }
 
@@ -308,6 +310,7 @@ Page {
                        duration: 600
                        easing.type: Easing.InOutQuad
                    }
+
                }
            }
        }
@@ -315,10 +318,10 @@ Page {
 
     Rectangle {
         id: playerDeck
-
+        visible: false
         x: parent.x + 29
-        y: parent.y + 259
-        width: 102
+        y: parent.y + 459
+        width: 202
         height: width * 1.5
         radius: 8
         border {
@@ -340,21 +343,18 @@ Page {
 
     Repeater {
         id: dealerRow
-        x: 30
-        y: 40
-        width: playerRow.width
-        height: playerRow.height
+        width: parent.width
 
-        model: 11
+        model: 0
 
         Rectangle {
             id: dealerCard
             property int dealerIndex : index + 11
             readonly property int value: window.model.getCard(dealerIndex)
 
-            x: parent.x + 30
-            y: parent.y + 100
-            width: 100
+            x: parent.x + (index*100)
+            y: parent.y + 300
+            width: 200
             height: width * 1.5
             radius: 8
 
@@ -374,21 +374,21 @@ Page {
 
                     SequentialAnimation {
                         PauseAnimation {
-                            duration: 200
+                            duration: 100
                         }
 
                         RotationAnimation {
                             target: dealerCard
                             direction: RotationAnimation.Clockwise
-                            to: rotation + 360
-                            duration: 400
+                            to: rotation + 180
+                            duration: 200
                         }
                     }
 
                     NumberAnimation {
                         target: dealerCard
                         property: "x"
-                        duration: 600
+                        duration: 300
                         easing.type: Easing.InOutQuad
                     }
                 }
@@ -398,10 +398,10 @@ Page {
 
     Rectangle {
         id: dealerDeck
-
+        visible: false
         x: parent.x + 29 //+ index*60 + 60
         y: parent.y + 99
-        width: 102
+        width: 202
         height: width * 1.5
         radius: 8
         border {
@@ -426,6 +426,7 @@ Page {
         window.model.shuffle()
         window.hitClicked()
         window.hitClicked()
+        window.initDealer()
         window.model.takeOne(false, currentDealerIndex + 11)
         window.dealerHits()
         window.update()
