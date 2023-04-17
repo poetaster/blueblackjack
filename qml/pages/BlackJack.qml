@@ -286,11 +286,17 @@ Page {
 
            Behavior on x {
                ParallelAnimation {
-                   /*PropertyAnimation {
+                   PropertyAnimation {
                        duration: 400
                        easing.type: Easing.InOutBack
-                   }*/
-
+                   }
+                   RotationAnimation {
+                       target: playerCard
+                       direction: RotationAnimation.Clockwise
+                       to: rotation + 180
+                       duration: 200
+                   }
+                   /*
                    SequentialAnimation {
                        PauseAnimation {
                            duration: 100
@@ -302,7 +308,7 @@ Page {
                            to: rotation + 180
                            duration: 200
                        }
-                   }
+                   }*/
 
                    NumberAnimation {
                        target: playerCard
@@ -371,8 +377,14 @@ Page {
                         duration: 600
                         easing.type: Easing.InOutBack
                     }
+                        RotationAnimation {
+                            target: dealerCard
+                            direction: RotationAnimation.Clockwise
+                            to: rotation + 180
+                            duration: 200
+                        }
 
-                    SequentialAnimation {
+                    /*SequentialAnimation {
                         PauseAnimation {
                             duration: 100
                         }
@@ -383,7 +395,7 @@ Page {
                             to: rotation + 180
                             duration: 200
                         }
-                    }
+                    }*/
 
                     NumberAnimation {
                         target: dealerCard
